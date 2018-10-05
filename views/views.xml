@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="linkaform_licenses.list">
+      <field name="name">linkaform_licenses list</field>
+      <field name="model">lkf.licenses</field>
+      <field name="arch" type="xml">
+        <tree string="Licenses">
+          <field name="owner_id"/>
+          <field name="user_id"/>
+          <field name="token"/>
+          <field name="expiration"/>
+          <field name="is_active"/>
+          <field name="plan_id"/>
+          <field name="product_id"/>
+          <field name="subscription_id"/>
+          <field name="connection_id"/>
+          <field name="due_date"/>
+          <field name="update_at"/>
+          <field name="properties"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="action_license_tree" model="ir.actions.act_window">
+            <field name="name">Licenses</field>
+            <field name="res_model">lkf.licenses</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <!-- <field name="view_id" ref="linkaform_licenses.list"/> -->
+    </record>
+
+      <record id="action_license_tree_2" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="linkaform_licenses.list"/>
+            <field name="act_window_id" ref="action_license_tree"/>
+        </record>
+
+  </data>
+</odoo>

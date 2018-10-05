@@ -1,0 +1,14 @@
+<odoo>
+       <record id="acquirer_form_conekta_aquirer_sub" model="ir.ui.view">
+            <field name="name">linkaform_licenses</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <div class="oe_button_box" name="button_box">
+                    <button name="acction_view_licenses" type="object" class="oe_stat_button" icon="fa-id-card-o" string="Licenses" >
+                        <field name="name" invisible="1"/>
+                    </button>
+                </div>
+            </field>
+    </record>
+</odoo>
