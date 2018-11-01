@@ -2,4 +2,6 @@
 <odoo>
     <menuitem id="licenses_list" name="Licenses" parent="account.menu_finance_receivables" sequence="99"  />
     <menuitem name="Licenses" id="menu_list_license" parent="linkaform_licenses.licenses_list"  action="action_license_tree"/>
+    <menuitem name="Users" id="menu_list_users" parent="linkaform_licenses.licenses_list"  action="action_user_tree"/>
+
 </odoo>
