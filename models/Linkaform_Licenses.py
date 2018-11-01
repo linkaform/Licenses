@@ -157,7 +157,6 @@ class linkaform_licenses(models.Model):
         lic = self.search([('id','=',self.id)])
         data = {'license_token':lic.token}
 
-        print 'vaaaaaaaaaaaaaaaaaaaaaaaaaalueeeeeeeeeeees', values
         if values.has_key('owner_id'):
             data['account_id'] = values['owner_id']
 
@@ -191,10 +190,8 @@ class ResPartner(models.Model):
     def acction_view_licenses(self):
         self.ensure_one()
         action = self.env.ref('linkaform_licenses.action_license_tree').read()[0]
-        # action['domain'] = literal_eval(action['domain'])
-        # action['domain'].append(('owner_id', '=', self.infosync_user_id))
-
-        # print 'aaaaaaaaaaaaaaaaaaaaaaaaaaactiiiiiiiiiiiioooooooooooooooooooooon', action
-        # return action
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('owner_id', '=', self.infosync_user_id))
+        return action
 
 
