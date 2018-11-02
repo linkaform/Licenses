@@ -16,13 +16,13 @@ class linkaform_licenses(models.Model):
 
 
     owner_id = fields.Many2one(comodel_name='lkf.users', string='Owner',required=True)
-    user_id = fields.Many2one(comodel_name='lkf.users', string='User',  domain= lambda self:self._get_users(),required=True)
+    user_id = fields.Many2one(comodel_name='lkf.users', string='User',  domain= lambda self:self._get_users())
     user_email = fields.Char()  #(compute='_set_user_email')
     user_name = fields.Char()  #(compute='_set_user_name')
     connection_name = fields.Many2one(comodel_name='lkf.users', string='Connection Name') #compute='_set_connection'
     token = fields.Char()
     expiration = fields.Date(required=True)
-    is_active = fields.Boolean()
+    is_active = fields.Boolean(default=True)
     plan_id = fields.Char()
     product_id = fields.Many2one(comodel_name="product.product",required=True)
     subscription_id = fields.Integer()
@@ -187,11 +187,17 @@ class linkaform_licenses(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    @api.multi
     def acction_view_licenses(self):
         self.ensure_one()
         action = self.env.ref('linkaform_licenses.action_license_tree').read()[0]
         action['domain'] = literal_eval(action['domain'])
-        action['domain'].append(('owner_id', '=', self.infosync_user_id))
+        action['domain'].pop(0)
+        action['domain'].append(('|'))
+        action['domain'].append(('owner_id', '=', self.infosync_user_id ))
+        action['domain'].append(('user_id', '=', self.infosync_user_id ))
+        action['domain'].append(('is_active', '=' , True))
+
         return action
 
 
