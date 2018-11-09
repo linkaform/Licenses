@@ -42,7 +42,6 @@ class Lkf_Users(models.Model):
             profile_picture=item['profile_picture']
             query = self.env.cr.execute("""INSERT INTO lkf_users (id,name,email,phone,parent_id,created_at,position,last_login,last_logout,deleted_at,timezone,date_joined,lang,profile_picture )VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", (id_lkf,name,email,phone,parent_id,created_at,position,last_login,last_logout,deleted_at,timezone,date_joined,lang,profile_picture))
 
-            print '',query
         return True
 
 
