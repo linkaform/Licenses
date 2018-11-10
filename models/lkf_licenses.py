@@ -7,24 +7,22 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo import models, fields, api
 from ast import literal_eval
 
-getLicenses = 'https://zato.linkaform.com/api/126/get_account_license'
-createLiccenses = 'https://zato.linkaform.com/api/126/create_license'
-updateLicence = 'https://zato.linkaform.com/api/126/update_license'
+enviroment = 'test'
 
 class linkaform_licenses(models.Model):
     _name = 'lkf.licenses'
 
 
-    owner_id = fields.Many2one(comodel_name='lkf.users', string='Owner',required=True)
+    owner_id = fields.Many2one(comodel_name='lkf.users', string='Owner')
     user_id = fields.Many2one(comodel_name='lkf.users', string='User',  domain= lambda self:self._get_users())
     user_email = fields.Char()  #(compute='_set_user_email')
     user_name = fields.Char()  #(compute='_set_user_name')
     connection_name = fields.Many2one(comodel_name='lkf.users', string='Connection Name') #compute='_set_connection'
     token = fields.Char()
-    expiration = fields.Date(required=True)
+    expiration = fields.Date()
     is_active = fields.Boolean(default=True)
     plan_id = fields.Char()
-    product_id = fields.Many2one(comodel_name="product.product",required=True)
+    product_id = fields.Many2one(comodel_name="product.product")
     subscription_id = fields.Integer()
     update_at = fields.Date()
     properties  = fields.Text()
@@ -54,13 +52,6 @@ class linkaform_licenses(models.Model):
     def _set_user_email(self):
         self.user_email = self.user_id.email
 
-    # @api.onchange('owener')
-    # def _set_user_email(self):
-    #     self.connection_name = self.owener.name
-    # @api.onchange('owener')
-    # def _set_user_email(self):
-    #     self.connection_name = self.owener.name
-
     @api.onchange('product_id')
     def _product_exp(self):
         duration = self.product_id.attribute_value_ids.name
@@ -74,14 +65,17 @@ class linkaform_licenses(models.Model):
             self.expiration = (datetime.datetime.now() + relativedelta(years=+1)).strftime("%Y-%m-%d")
 
     @api.model
-    def cron_licences(self):
-        self.create_in_database()
+    def cron_licenses(self,env):
+        ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', env)])
+        host = ambiente.host
+        aut = ambiente.api_key
+        self.create_in_database(aut,host)
 
     @api.model
-    def create_in_database(self):
+    def create_in_database(self,aut,host):
         query = 'delete from lkf_licenses'
         self.env.cr.execute(query)
-        res = self.connect_to_service()
+        res = self.connect_to_service(aut,host)
         for item in res:
             owner_id = item['connection_id']
             user_id = item['user_id']
@@ -103,9 +97,9 @@ class linkaform_licenses(models.Model):
 
         return True
 
-    def connect_to_service(self):
-        url = getLicenses
-        headers = {'Content-type': 'application/json','Authorization': 'simon_carnal'}
+    def connect_to_service(self,aut,host):
+        url = host+'get_account_license'
+        headers = {'Content-type': 'application/json','Authorization': aut}
         response = {'data':{}, 'status_code':''}
 
         r = requests.get(url,headers=headers)
@@ -122,8 +116,9 @@ class linkaform_licenses(models.Model):
 
     @api.model
     def create(self,values):
-        url = createLiccenses
-        headers = {'Content-type': 'application/json','Authorization': 'simon_carnal'}
+        ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', enviroment)])
+        url = ambiente.host+'create_license'
+        headers = {'Content-type': 'application/json','Authorization': ambiente.api_key}
         response = {'data':{}, 'status_code':''}
         objeto = {
                 "account_id": values['owner_id'],
@@ -152,8 +147,9 @@ class linkaform_licenses(models.Model):
 
     @api.multi
     def write(self,values):
-        url = updateLicence
-        headers = {'Content-type': 'application/json','Authorization': 'simon_carnal'}
+        ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', enviroment)])
+        url = ambiente.host+'update_license'
+        headers = {'Content-type': 'application/json','Authorization': ambiente.api_key}
         lic = self.search([('id','=',self.id)])
         data = {'license_token':lic.token}
 

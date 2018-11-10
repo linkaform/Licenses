@@ -30,16 +30,16 @@
             </group>
             <group colspan="4">
               <group>
-                <field name="owner_id"/>
+                <field name="owner_id" attrs="{'required':True}"/>
                 <field name="user_id"/>
-                <field name="product_id"/>
+                <field name="product_id" attrs="{'required':True}"/>
                 <field name="is_active" readonly="1"/>
               </group>
               <group>
                 <field name="connection_name"/>
                 <field name="user_name"/>
                 <field name="user_email"/>
-                <field name="expiration"/>
+                <field name="expiration" />
                 <field name="token" readonly="1"/>
               </group>
             </group>

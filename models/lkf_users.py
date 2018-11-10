@@ -22,9 +22,16 @@ class Lkf_Users(models.Model):
     date_joined = fields.Char()
     id_lkf = fields.Integer()
 
+    def cron_users(self,env):
+        ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', env)])
+        host = ambiente.host
+        aut = ambiente.api_key
+        self.create_in_database(aut,host)
+
+
     @api.model
-    def create_in_database(self):
-        res = self.connect_to_service()
+    def create_in_database(self,aut, host):
+        res = self.connect_to_service(aut,host)
         for item in res:
             id_lkf=item['id']
             name=item['first_name']
@@ -45,9 +52,9 @@ class Lkf_Users(models.Model):
         return True
 
 
-    def connect_to_service(self):
-        url = 'https://zato.linkaform.com/api/126/get_lkf_users'
-        headers = {'Content-type': 'application/json','Authorization': 'simon_carnal'}
+    def connect_to_service(self, aut, host):
+        url = host+'get_lkf_users'
+        headers = {'Content-type': 'application/json','Authorization': aut}
         response = {'data':{}, 'status_code':''}
 
         r = requests.get(url,headers=headers)
@@ -60,3 +67,10 @@ class Lkf_Users(models.Model):
             else:
                 response['data'] = r_data
         return response['data']['response']['response']
+
+class lkf_licenses_config(models.Model):
+    _name = "lkf.licenses.config"
+
+    enviroment = fields.Char()
+    host = fields.Char()
+    api_key = fields.Char()
