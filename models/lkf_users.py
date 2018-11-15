@@ -31,6 +31,8 @@ class Lkf_Users(models.Model):
 
     @api.model
     def create_in_database(self,aut, host):
+        query = 'delete from lkf_users'
+        self.env.cr.execute(query)
         res = self.connect_to_service(aut,host)
         for item in res:
             id_lkf=item['id']
