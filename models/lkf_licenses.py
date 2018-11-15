@@ -107,7 +107,7 @@ class linkaform_licenses(models.Model):
 
         if r.status_code == 200:
             r_data = simplejson.loads(r.content)
-            if r_data.has_key('objects'):
+            if 'objects' in r_data.keys():
                 response['data'] = r_data['objects']
             else:
                 response['data'] = r_data
@@ -153,22 +153,22 @@ class linkaform_licenses(models.Model):
         lic = self.search([('id','=',self.id)])
         data = {'license_token':lic.token}
 
-        if values.has_key('owner_id'):
+        if 'owner_id'  in values.keys():
             data['account_id'] = values['owner_id']
 
-        if values.has_key('expiration'):
+        if 'expiration' in values.keys():
             data['expiration'] = values['expiration']
 
-        if values.has_key('connection_id'):
+        if 'connection_id' in values.keys():
             data['connection_id'] = values['connection_id']
 
-        if values.has_key('user_id'):
+        if 'user_id' in values.keys():
             data['user_id'] = values['user_id']
 
-        if values.has_key('product_id'):
+        if 'product_id' in values.keys():
             data['product_id'] = values['product_id']
 
-        if values.has_key('properties'):
+        if 'properties' in values.keys():
             data['properties'] = values['properties']
 
         values['update_at'] = datetime.datetime.now().strftime("%Y-%m-%d")

@@ -62,7 +62,7 @@ class Lkf_Users(models.Model):
 
         if r.status_code == 200:
             r_data = simplejson.loads(r.content)
-            if r_data.has_key('objects'):
+            if 'objects' in r_data.keys():
                 response['data'] = r_data['objects']
             else:
                 response['data'] = r_data
