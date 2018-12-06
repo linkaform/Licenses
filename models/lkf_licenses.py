@@ -126,13 +126,14 @@ class linkaform_licenses(models.Model):
         response = {'data':{}, 'status_code':''}
         objeto = {
                 "account_id": values['owner_id'],
-                "user_id":values['user_id'],
                 "product_id":values['product_id'],
                 "expiration": values['expiration']
             }
 
         if values['connection_name']:
             objeto["connection_id"] = values['connection_name']
+        if values['user_id']:
+            objeto['user_id'] = values['user_id'],
         if values['number']:
             objeto['qty'] = values['number']
 
