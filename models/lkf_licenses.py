@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import requests, simplejson, json
+import requests, simplejson, json, socket
 import  datetime
 from dateutil.relativedelta import relativedelta
 
@@ -8,6 +8,10 @@ from odoo import models, fields, api
 from ast import literal_eval
 
 enviroment = 'test'
+
+if socket.gethostname() == 'odoo-prod':
+  enviroment = 'prod'
+
 
 class linkaform_licenses(models.Model):
     _name = 'lkf.licenses'
