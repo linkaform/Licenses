@@ -32,7 +32,7 @@ class linkaform_licenses(models.Model):
     properties  = fields.Text()
     number = fields.Integer(string="N° de Licencias")
 
-    @api.multi
+    @api.model
     @api.onchange('owner_id','connection_name')
     def _get_users(self):
         owener = self.owner_id.id
@@ -120,6 +120,7 @@ class linkaform_licenses(models.Model):
 
     @api.model
     def create(self,values):
+        print('enviroment',enviroment)
         ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', enviroment)])
         url = ambiente.host+'create_license'
         headers = {'Content-type': 'application/json','Authorization': ambiente.api_key}
@@ -130,10 +131,11 @@ class linkaform_licenses(models.Model):
                 "expiration": values['expiration']
             }
 
+
         if values['connection_name']:
             objeto["connection_id"] = values['connection_name']
         if values['user_id']:
-            objeto['user_id'] = values['user_id'],
+            objeto['user_id'] = values['user_id']
         if values['number']:
             objeto['qty'] = values['number']
 
