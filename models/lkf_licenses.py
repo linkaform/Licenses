@@ -120,7 +120,6 @@ class linkaform_licenses(models.Model):
 
     @api.model
     def create(self,values):
-        print('enviroment',enviroment)
         ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', enviroment)])
         url = ambiente.host+'create_license'
         headers = {'Content-type': 'application/json','Authorization': ambiente.api_key}
@@ -202,5 +201,11 @@ class ResPartner(models.Model):
         action['domain'].append(('is_active', '=' , True))
 
         return action
+
+# class linkaform_licenses_custom(models.TransientModel):
+#     _name = 'lkf.licenses_custom'
+
+#     expiration = fields.Date(string="Fecha de Expiracion de Licencias")
+
 
 

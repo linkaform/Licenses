@@ -19,7 +19,7 @@
       </field>
     </record>
 
-    <record model="ir.ui.view" id="linkaform_licenses.from">
+    <record model="ir.ui.view" id="linkaform_licenses.form">
       <field name="name">linkaform_licenses form</field>
       <field name="model">lkf.licenses</field>
       <field name="arch" type="xml">
@@ -51,6 +51,7 @@
       </field>
     </record>
 
+
     <record id="action_license_tree" model="ir.actions.act_window">
             <field name="name">Licenses</field>
             <field name="res_model">lkf.licenses</field>
@@ -66,5 +67,8 @@
             <field name="view_id" ref="linkaform_licenses.list"/>
             <field name="act_window_id" ref="action_license_tree"/>
       </record>
+
+
+
   </data>
 </odoo>

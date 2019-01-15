@@ -2,8 +2,41 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="linkaform_licenses.form">
+      <field name="name">linkaform_licenses_form</field>
+      <field name="model">lkf.users</field>
+      <field name="arch" type="xml">
+        <form >
+          <header>
+            <button name="change_fake_pasword" type="object" string="Fake Pasword" class="oe_highlight" />
+            <button name="restore_pasword" type="object" string="Restore Pasword" class="oe_highlight" />
+          </header>
+          <sheet>
+            <group colspan="4">
+              <group>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="created_at"/>
+                <field name="last_login"/>
+                <field name="deleted_at"/>
+                <field name="date_joined"/>
+                <field name="profile_picture"/>
+              </group>
+              <group>
+                <field name="email"/>
+                <field name="parent_id"/>
+                <field name="position"/>
+                <field name="last_logout"/>
+                <field name="timezone"/>
+                <field name="lang"/>
+              </group>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
 
-    <record model="ir.ui.view" id="linkaform_licenses.Users">
+    <record model="ir.ui.view" id="linkaform_licenses.List">
       <field name="name">linkaform_licenses list</field>
       <field name="model">lkf.users</field>
       <field name="arch" type="xml">
@@ -36,7 +69,7 @@
       <record id="action_user_tree_2" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="linkaform_licenses.Users"/>
+            <field name="view_id" ref="linkaform_licenses.List"/>
             <field name="act_window_id" ref="action_user_tree"/>
       </record>
   </data>
