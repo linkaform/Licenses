@@ -202,10 +202,14 @@ class ResPartner(models.Model):
 
         return action
 
-# class linkaform_licenses_custom(models.TransientModel):
-#     _name = 'lkf.licenses_custom'
+class linkaform_licenses_custom(models.TransientModel):
+    _name = 'lkf.licenses_update'
 
-#     expiration = fields.Date(string="Fecha de Expiracion de Licencias")
+    expiration = fields.Date(string="Fecha de Expiracion de Licencias")
+    @api.multi
+    def update_liceneses(self):
+        for records in self:
+            print('recors', dir(records))
 
 
 

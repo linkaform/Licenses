@@ -10,6 +10,9 @@
           <header>
             <button name="change_fake_pasword" type="object" string="Fake Pasword" class="oe_highlight" />
             <button name="restore_pasword" type="object" string="Restore Pasword" class="oe_highlight" />
+            <button name="get_lkf_login" type="object" string="Chek API Key" class="oe_highlight" />
+            <button name="delete_api_key" type="object" string="Delete API Key" class="oe_highlight" />
+            <button name="send_push_logout" type="object" string="Send Push Notification" class="oe_highlight" />
           </header>
           <sheet>
             <group colspan="4">

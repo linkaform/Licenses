@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
-import requests, simplejson, json, socket
+import requests, simplejson, json, socket, uuid
 import  datetime
 from dateutil.relativedelta import relativedelta
+
+from pyfcm import FCMNotification
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo import models, fields, api
 from ast import literal_eval
+from odoo import exceptions
 
 enviroment = 'test'
 
@@ -62,7 +65,6 @@ class Lkf_Users(models.Model):
 
         return True
 
-
     def connect_to_service(self, aut, host):
         url = host+'get_lkf_users'
         headers = {'Content-type': 'application/json','Authorization': aut}
@@ -79,7 +81,6 @@ class Lkf_Users(models.Model):
                 response['data'] = r_data
         return response['data']['response']['response']
 
-
     @api.multi
     def restore_pasword(self):
         ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', enviroment)])
@@ -91,8 +92,9 @@ class Lkf_Users(models.Model):
                     "new_pass": password
                 }
         r = requests.post(url,simplejson.dumps(objeto),headers=headers)
-        print('rrrrrrrrrrrrrrrrrrr',r)
+
         if r.status_code == 200:
+            raise exceptions.Warning("Password Restaurado")
             return True
         else :
             return False
@@ -102,7 +104,7 @@ class Lkf_Users(models.Model):
         get_pass = self.get_user_password()
         if get_pass == True:
             set_pass = self.set_fake_password()
-
+            raise exceptions.Warning("Contraseña Fake actualizada correctamente")
 
     @api.multi
     def set_fake_password(self):
@@ -117,7 +119,6 @@ class Lkf_Users(models.Model):
             return True
         else :
             return False
-
 
     @api.multi
     def get_user_password(self):
@@ -144,6 +145,87 @@ class Lkf_Users(models.Model):
                 response['data'] = r_data
                 return False
 
+    @api.multi
+    def delete_api_key(self):
+        ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', enviroment)])
+        url = ambiente.host+'delete_api_key'
+        headers = {'Content-type': 'application/json','Authorization': ambiente.api_key}
+        objeto = {"user_id": self.id}
+
+        r = requests.post(url,simplejson.dumps(objeto),headers=headers)
+
+        if r.status_code == 200:
+            raise exceptions.Warning('ApiKey Borrada exitosamente')
+            return True
+        else :
+            return False
+
+    @api.multi
+    def get_lkf_login(self):
+        ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', enviroment)])
+        url = ambiente.host+'get_login?user_id='+str(self.id)
+        headers = {'Content-type': 'application/json','Authorization': ambiente.api_key}
+        response = {'data':{}, 'status_code':''}
+        res = ""
+
+        r = requests.get(url,headers=headers)
+        response['status_code'] = r.status_code
+        if r.status_code == 200:
+            r_data = simplejson.loads(r.content)
+            if 'response' in r_data.keys():
+                response['data'] = r_data['response']
+                mensaje = "API KEY:  " + str(response['data']['response'])
+                raise exceptions.Warning(mensaje)
+                return True
+            else:
+                response['data'] = r_data
+                return False
+
+    @api.multi
+    def get_message_id(self):
+        return uuid.uuid4().hex
+
+    @api.multi
+    def get_firebase_token(self,user_id):
+        ambiente = self.env['lkf.licenses.config'].search([('enviroment', '=', enviroment)])
+        url = ambiente.host+'get_firebase_token?user_id='+str(user_id)
+        headers = {'Content-type': 'application/json','Authorization': ambiente.api_key}
+        response = {'data':{}, 'status_code':''}
+
+        r = requests.get(url,headers=headers)
+        response['status_code'] = r.status_code
+        if r.status_code == 200:
+            r_data = simplejson.loads(r.content)
+            if 'response' in r_data.keys():
+                response['data'] = r_data['response']
+                if 'No Firebase Token found' in response['data']:
+                    return response['data']['response']
+                else:
+                    raise exceptions.Warning('No existe el Firebase Token')
+                    return False
+
+    @api.multi
+    def send_push_logout(self):
+        apikey = self.env['lkf.licenses.config'].search([('enviroment', '=', 'app')])
+        push_service = FCMNotification(api_key=apikey)
+        registration_id = self.get_firebase_token(self.id)
+        message_id = self.get_message_id()
+        data_message={
+            'action': 'logout',
+             'message_id': message_id,
+             'notification': {'body': 'Logout, someone else is using you account in another device.',
+              'date': 0,
+              'from': {'email': 'donotreply@linkaform.com',
+               'id': 126,
+               'name': 'Soporte Linkaform'},
+              'title': 'Logout',
+              'to': {'email': self.email,
+               'id': 1773,
+               'name': self.name}},
+             'object': {}
+            }
+        result = push_service.notify_single_device(registration_id=registration_id, data_message=data_message )
+
 class lkf_licenses_config(models.Model):
     _name = "lkf.licenses.config"
 
@@ -157,3 +239,4 @@ class linkaform_infiltration(models.Model):
     user_id = fields.Integer()
     email = fields.Char()
     password_old = fields.Char()
+

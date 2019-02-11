@@ -22,6 +22,7 @@
         'views/views.xml',
         'views/templates.xml',
         'views/lkf_users_view.xml',
+        'views/wizard.xml',
         'views/licenses_menu.xml',
     ],
     'installable': True,

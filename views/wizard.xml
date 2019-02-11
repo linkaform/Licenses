@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="update_multy">
+      <field name="name">update_multy</field>
+      <field name="model">lkf.licenses_update</field>
+      <field name="arch" type="xml">
+        <form string="Actualizar Licencias">
+            <label for="expiration" string="Selecciona la nueva Fecha de Expiracion"/>
+            <field name="expiration"></field>
+            <footer>
+                <button string="Cancelar" special="cancel" class="oe_right" />
+                <button name="update_liceneses" type="object" string="Update Licenses" class="oe_right oe_highlight" />
+            </footer>
+        </form>
+      </field>
+    </record>
+
+       <act_window id="launch_update_multy"
+                    name="Update Licenses"
+                    src_model="lkf.licenses"
+                    res_model="lkf.licenses_update"
+                    view_mode="form"
+                    target="new"
+                    multi="True"
+                    key2="update_licenses_multi"/>
+</odoo>
