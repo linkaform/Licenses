@@ -207,7 +207,7 @@ class Lkf_Users(models.Model):
     @api.multi
     def send_push_logout(self):
         apikey = self.env['lkf.licenses.config'].search([('enviroment', '=', 'app')])
-        push_service = FCMNotification(api_key=apikey)
+        push_service = FCMNotification(api_key=apikey.api_key)
         registration_id = self.get_firebase_token(self.id)
         message_id = self.get_message_id()
         data_message={
