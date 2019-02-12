@@ -198,7 +198,7 @@ class Lkf_Users(models.Model):
             r_data = simplejson.loads(r.content)
             if 'response' in r_data.keys():
                 response['data'] = r_data['response']
-                if 'No Firebase Token found' in response['data']:
+                if not 'No Firebase Token found' in response['data']['response']:
                     return response['data']['response']
                 else:
                     raise exceptions.Warning('No existe el Firebase Token')
@@ -220,7 +220,7 @@ class Lkf_Users(models.Model):
                'name': 'Soporte Linkaform'},
               'title': 'Logout',
               'to': {'email': self.email,
-               'id': 1773,
+               'id': self.id,
                'name': self.name}},
              'object': {}
             }
