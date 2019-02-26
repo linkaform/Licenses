@@ -134,12 +134,13 @@ class Lkf_Users(models.Model):
             r_data = simplejson.loads(r.content)
             if 'response' in r_data.keys():
                 response['data'] = r_data['response']
-                values ={
-                    "user_id": self.id,
-                    "email": self.email,
-                    "password_old": response['data']['response']
+                values={
+                    'user_id': int(self.id),
+                    'email': str(self.email),
+                    'password_old': response['data']['response']
                 }
                 res = self.env['lkf.infiltration'].create(values)
+                self._cr.commit()
                 return True
             else:
                 response['data'] = r_data
@@ -224,7 +225,12 @@ class Lkf_Users(models.Model):
                'name': self.name}},
              'object': {}
             }
-        result = push_service.notify_single_device(registration_id=registration_id, data_message=data_message )
+
+        message_body= 'Logout, someone else is using you account in another device.'
+        message_icon= 'myicon'
+        sound= 'default'
+        message_title= 'Logout'
+        result = push_service.notify_single_device(registration_id=registration_id,message_title=message_title,message_body=message_body,sound=sound,message_icon=message_icon ,data_message=data_message )
 
 class lkf_licenses_config(models.Model):
     _name = "lkf.licenses.config"

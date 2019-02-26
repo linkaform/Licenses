@@ -2,25 +2,8 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-
-    <record model="ir.ui.view" id="linkaform_licenses.list">
-      <field name="name">linkaform_licenses list</field>
-      <field name="model">lkf.licenses</field>
-      <field name="arch" type="xml">
-        <tree string="Licenses">
-          <field name="owner_id"/>
-          <field name="connection_name"/>
-          <field name="user_email"/>
-          <field name="user_name"/>
-          <field name="expiration"/>
-          <field name="is_active"/>
-          <field name="update_at"/>
-        </tree>
-      </field>
-    </record>
-
     <record model="ir.ui.view" id="linkaform_licenses.form">
-      <field name="name">linkaform_licenses form</field>
+      <field name="name">linkaform_licenses_form</field>
       <field name="model">lkf.licenses</field>
       <field name="arch" type="xml">
         <form>
@@ -51,6 +34,22 @@
       </field>
     </record>
 
+    <record model="ir.ui.view" id="linkaform_licenses.List">
+      <field name="name">linkaform_licenses list</field>
+      <field name="model">lkf.licenses</field>
+      <field name="arch" type="xml">
+        <tree string="Licenses">
+          <field name="owner_id"/>
+          <field name="connection_name"/>
+          <field name="user_email"/>
+          <field name="user_name"/>
+          <field name="expiration"/>
+          <field name="is_active"/>
+          <field name="update_at"/>
+        </tree>
+      </field>
+    </record>
+
     <record id="action_license_tree" model="ir.actions.act_window">
             <field name="name">Licenses</field>
             <field name="res_model">lkf.licenses</field>
@@ -63,7 +62,7 @@
       <record id="action_license_tree_2" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="linkaform_licenses.list"/>
+            <field name="view_id" ref="linkaform_licenses.List"/>
             <field name="act_window_id" ref="action_license_tree"/>
       </record>
 
