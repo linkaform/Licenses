@@ -16,7 +16,6 @@ if socket.gethostname() == 'odoo-prod':
 class linkaform_licenses(models.Model):
     _name = 'lkf.licenses'
 
-
     owner_id = fields.Many2one(comodel_name='lkf.users', string='Owner')
     user_id = fields.Many2one(comodel_name='lkf.users', string='User',  domain= lambda self:self._get_users())
     user_email = fields.Char()  #(compute='_set_user_email')
@@ -96,7 +95,7 @@ class linkaform_licenses(models.Model):
             update_at = datetime.datetime.now().strftime("%Y-%m-%d")
             properties = item['properties']
 
-            licenses = self.env.cr.execute("""INSERT INTO lkf_licenses (id,owner_id,user_id,user_email,user_name,connection_name,token,expiration,is_active,plan_id,product_id,subscription_id,update_at,properties) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(ids,owner_id,user_id,user_email,user_name,connection_id,token,expiration,is_active,plan_id,product_id,subscription_id,update_at,properties))
+            licenses = self.env.cr.execute("""INSERT INTO lkf_licenses (owner_id,user_id,user_email,user_name,connection_name,token,expiration,is_active,plan_id,product_id,subscription_id,update_at,properties) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",(owner_id,user_id,user_email,user_name,connection_id,token,expiration,is_active,plan_id,product_id,subscription_id,update_at,properties))
 
 
         return True
@@ -157,7 +156,7 @@ class linkaform_licenses(models.Model):
         url = ambiente.host+'update_license'
         headers = {'Content-type': 'application/json','Authorization': ambiente.api_key}
         lic = self.search([('id','=',self.id)])
-        data = {'license_token':lic.token}
+        data = {'license_token':lic.token, 'update_by':['token']}
 
         if 'owner_id'  in values.keys():
             data['account_id'] = values['owner_id']

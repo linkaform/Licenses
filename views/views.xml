@@ -8,7 +8,7 @@
       <field name="arch" type="xml">
         <form>
           <sheet>
-            <group >
+            <group colspan="4">
               <field name="number" />
             </group>
             <group colspan="4">
@@ -34,8 +34,8 @@
       </field>
     </record>
 
-    <record model="ir.ui.view" id="linkaform_licenses.List">
-      <field name="name">linkaform_licenses list</field>
+    <record model="ir.ui.view" id="linkaform_licenses.list">
+      <field name="name">linkaform_licenses.list</field>
       <field name="model">lkf.licenses</field>
       <field name="arch" type="xml">
         <tree string="Licenses">
@@ -62,7 +62,7 @@
       <record id="action_license_tree_2" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="linkaform_licenses.List"/>
+            <field name="view_id" ref="linkaform_licenses.list"/>
             <field name="act_window_id" ref="action_license_tree"/>
       </record>
 
